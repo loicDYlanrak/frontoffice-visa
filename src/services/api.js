@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const BASE_URL = process.env.REACT_APP_API_URL;
+
 
 const api = axios.create({
   baseURL: `${API_BASE_URL}`,
@@ -73,5 +75,22 @@ export const testService = {
     }
   },
 };
+
+export const rechercherParNumeroDemande = (numeroDemande) =>
+  axios.get(`${BASE_URL}/demandesRecherche`, {
+    params: { numeroDemande }
+  });
+
+// Recherche par numéro de passeport
+export const rechercherParPasseport = (numeroPasseport) =>
+  axios.get(`${BASE_URL}/demandesRecherche`, {
+    params: { numeroPasseport }
+  });
+
+// Recherche duplicata/transfert
+export const rechercherDuplicata = (numCarte, numVisa, transfer, duplicata) =>
+  axios.post(`${BASE_URL}/duplicata/rechercher`, null, {
+    params: { numCarte, numVisa, transfer, duplicata }
+  });
 
 export default api;
