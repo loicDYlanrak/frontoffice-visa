@@ -7,6 +7,8 @@ import Accueil from './pages/Accueil';
 import ListeTest from './components/ListeTest';
 import RechercheDemandeApp from "./components/Recherche";
 import FicheDemande from "./components/FicheDemande";
+import HistoStatutDemande from "./components/HistoStatutDemande";
+import FichiersDetailDemande from "./components/FichiersDetailDemande";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
               <Route path="/tests"   element={<ListeTest />}           />
               <Route path="/recherche" element={<RechercheDemandeApp />} />
               <Route path="/fiche-demande/:id" element={<FicheDemande />} />
+              <Route path="/histo-statut/:id" element={<HistoStatutDemande />} />
+              <Route path="/fichiers-detail/:id" element={<FichiersDetailDemande />} />
             </Routes>
           </div>
         </div>

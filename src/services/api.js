@@ -87,4 +87,22 @@ export const rechercherParPasseport = (numeroPasseport) =>
     params: { numeroPasseport }
   });
 
+// Détails d'une demande
+export const getDemandeDetails = (id) =>
+  axios.get(`${BASE_URL}/demandeDetails/${id}`);
+
+// Historique des statuts
+export const getHistoStatut = (id) =>
+  axios.get(`${BASE_URL}/demandeDetails/HistoStatut/${id}`);
+
+// Fichiers uploadés
+export const getDetailsFichier = (id) =>
+  axios.get(`${BASE_URL}/demandeDetails/DetailsFichier/${id}`);
+
+// Recherche duplicata/transfert
+export const rechercherDuplicata = (numCarte, numVisa, transfer, duplicata) =>
+  axios.post(`${BASE_URL}/duplicata/rechercher`, null, {
+    params: { numCarte, numVisa, transfer, duplicata }
+  });
+
 export default api;

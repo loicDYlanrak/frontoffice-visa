@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 const Sidebar = () => {
   const menuItems = [
     { path: '/', icon: '🏠', label: 'Accueil' },
+    { path: '/recherche', icon: '🔍', label: 'Rechercher Demande' },
     { path: '/tests', icon: '📋', label: 'Liste des Tests' },
     { path: '/tests/create', icon: '➕', label: 'Créer un Test' },
     { path: '/about', icon: 'ℹ️', label: 'À propos' }

@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import Accueil from "./components/Accueil";
 import RechercheDemandeApp from "./components/Recherche";
 import FicheDemande from "./components/FicheDemande";
+import HistoStatutDemande from "./components/HistoStatutDemande";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
               <Route path="/"           element={<Accueil />}             />
               <Route path="/recherche"  element={<RechercheDemandeApp />} />
               <Route path="/fiche-demande/:id" element={<FicheDemande />} />
+              <Route path="/histo-statut/:id" element={<HistoStatutDemande />} />
             </Routes>
           </div>
         </div>
