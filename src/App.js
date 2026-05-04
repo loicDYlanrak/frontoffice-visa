@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar';
 import Accueil from './pages/Accueil';
 import ListeTest from './components/ListeTest';
 import RechercheDemandeApp from "./components/Recherche";
+import FicheDemande from "./components/FicheDemande";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               <Route path="/"        element={<Accueil />}             />
               <Route path="/tests"   element={<ListeTest />}           />
               <Route path="/recherche" element={<RechercheDemandeApp />} />
+              <Route path="/fiche-demande/:id" element={<FicheDemande />} />
             </Routes>
           </div>
         </div>

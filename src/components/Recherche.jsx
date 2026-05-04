@@ -1,23 +1,21 @@
 import { useState } from "react";
-import {
-  rechercherParNumeroDemande,
-  rechercherParPasseport
-} from "../services/api";
+import { rechercherParNumeroDemande, rechercherParPasseport } from "../services/api";
+import ListeDemande from "./ListeDemande";
 
 function RechercheDemandeApp() {
   const [numeroDemande, setNumeroDemande] = useState("");
   const [numeroPasseport, setNumeroPasseport] = useState("");
-  const [demandes, setDemandes]   = useState([]);
-  const [erreur, setErreur]       = useState("");
-  const [loading, setLoading]     = useState(false);
-  const [rechercheFaite, setRechercheFaite] = useState(false); // ← nouveau
+  const [demandePrincipale, setDemandePrincipale] = useState([]);
+  const [demandesAssociees, setDemandesAssociees] = useState([]);
+  const [erreur, setErreur]   = useState("");
+  const [loading, setLoading] = useState(false);
+  const [mode, setMode]       = useState(""); // "demande" ou "passeport"
 
   const handleRecherche = async () => {
-    setRechercheFaite(true);
     setErreur("");
-    setDemandes([]);
+    setDemandePrincipale([]);
+    setDemandesAssociees([]);
 
-    // Si les deux sont vides → afficher "Aucune demande trouvée"
     if (!numeroDemande && !numeroPasseport) {
       setErreur("Aucune demande trouvée");
       return;
@@ -29,26 +27,30 @@ function RechercheDemandeApp() {
       let res;
 
       if (numeroDemande) {
+        setMode("demande");
         res = await rechercherParNumeroDemande(numeroDemande);
-      } else {
-        res = await rechercherParPasseport(numeroPasseport);
-      }
 
-      if (res.data && res.data.length > 0) {
-        setDemandes(res.data);
+        const [premiere, ...reste] = res.data;
+        setDemandePrincipale(premiere ? [premiere] : []);
+        setDemandesAssociees(reste);
+        console.log("Données reçues :", res.data);
+
       } else {
-        setErreur("Aucune demande trouvée");
+        setMode("passeport");
+        res = await rechercherParPasseport(numeroPasseport);
+
+        const triees = res.data.sort((a, b) =>
+          new Date(a.dateDemande) - new Date(b.dateDemande)
+        );
+        setDemandePrincipale(triees);
       }
 
     } catch (err) {
       if (err.response?.status === 404) {
         setErreur("Aucune demande trouvée");
-      } else if (err.response?.status === 400) {
-        setErreur("Aucune demande trouvée");
       } else {
         setErreur("❌ Erreur serveur.");
       }
-      setDemandes([]);
     } finally {
       setLoading(false);
     }
@@ -71,24 +73,29 @@ function RechercheDemandeApp() {
       <button onClick={handleRecherche}>Rechercher</button>
 
       {loading && <p>⏳ Chargement...</p>}
+      {erreur   && <p style={{ color: "red" }}>{erreur}</p>}
 
-      {/* Message erreur ou aucun résultat */}
-      {!loading && erreur && (
-        <p style={{ color: "red" }}>{erreur}</p>
+      {/* Recherche par numéro demande */}
+      {mode === "demande" && demandePrincipale.length > 0 && (
+        <>
+          <ListeDemande demandes={demandePrincipale} titre="Demande" />
+
+          {demandesAssociees.length > 0 && (
+            <>
+              <hr />
+              <ListeDemande demandes={demandesAssociees} titre="Demandes associées" />
+            </>
+            
+          )}
+        </>
       )}
 
-      {/* Liste des demandes trouvées */}
-      {!loading && demandes.length > 0 && (
-        <ul>
-          {demandes.map((demande) => (
-            <li key={demande.id}>
-              Demande #{demande.id} — {demande.demandeur?.nom}
-            </li>
-          ))}
-        </ul>
+      {/* Recherche par passeport */}
+      {mode === "passeport" && demandePrincipale.length > 0 && (
+        <ListeDemande demandes={demandePrincipale} titre="Demandes liées au passeport" />
       )}
     </div>
-  );
+  );  
 }
 
 export default RechercheDemandeApp;

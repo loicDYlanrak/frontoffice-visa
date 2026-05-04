@@ -87,10 +87,4 @@ export const rechercherParPasseport = (numeroPasseport) =>
     params: { numeroPasseport }
   });
 
-// Recherche duplicata/transfert
-export const rechercherDuplicata = (numCarte, numVisa, transfer, duplicata) =>
-  axios.post(`${BASE_URL}/duplicata/rechercher`, null, {
-    params: { numCarte, numVisa, transfer, duplicata }
-  });
-
 export default api;

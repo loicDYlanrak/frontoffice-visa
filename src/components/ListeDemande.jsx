@@ -1,61 +1,60 @@
 import React from 'react';
+// import { useNavigate } from "react-router-dom";
+import { QRCodeSVG } from "qrcode.react";
+import { Link } from "react-router-dom";
 
-const ListeDemande = ({ demandes }) => {
-  if (!demandes || demandes.length === 0) {
-    return (
-      <div className="liste-demande">
-        <div className="empty-state">
-          <p>📭 Aucune demande à afficher</p>
-        </div>
-      </div>
-    );
-  }
+function ListeDemande({ demandes, titre = "Résultats" }) {
+  // const navigate = useNavigate();
 
   return (
-    <div className="liste-demande">
-      <div className="results-header">
-        <h2> Résultats de Recherche</h2>
-        <span className="result-count">{demandes.length} demande(s) trouvée(s)</span>
-      </div>
-
-      <table className="demandes-table">
+    <div>
+      <h2>{titre} ({demandes.length} demande{demandes.length > 1 ? "s" : ""} trouvée{demandes.length > 1 ? "s" : ""})</h2>
+      <table border="1">
         <thead>
           <tr>
             <th>ID</th>
-            <th>Numéro Demande</th>
-            <th>Numéro Passeport</th>
-            <th>Statut</th>
-            <th>Date de Création</th>
-            <th>Actions</th>
+            <th>Date demande</th>
+            <th>Demandeur</th>
+            <th>Numéro passeport</th>
+            <th>Numéro visa</th>
+            <th>Type demande</th>
+            <th>Type visa</th>
+            <th>QR Code</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {demandes.map((demande) => (
-            <tr key={demande.id}>
-              <td>#{demande.id}</td>
-              <td><strong>{demande.name || demande.numeroDemande || '—'}</strong></td>
-              <td>{demande.description || demande.numeroPasseport || '—'}</td>
-              <td>
-                <span className={`status status-${demande.status === 1 ? 'active' : 'inactive'}`}>
-                  {demande.status === 1 ? ' Actif' : ' Inactif'}
-                </span>
-              </td>
-              <td>
-                {demande.createdAt 
-                  ? new Date(demande.createdAt).toLocaleDateString('fr-FR') 
-                  : '—'
-                }
-              </td>
-              <td>
-                <button className="btn-view" title="Détails">👁️ Voir</button>
-                <button className="btn-edit" title="Modifier">✏️ Modifier</button>
-              </td>
-            </tr>
-          ))}
+          {demandes.map((demande) => {
+            const visa = demande.visaTransformable;
+            const passeport = visa?.passeport;
+
+            return (
+              <tr key={demande.id}>
+                <td>{demande.id}</td>
+                <td>{demande.dateDemande}</td>
+                <td>{demande.demandeur?.nom} {demande.demandeur?.prenom}</td>
+                <td>{passeport?.numeroPasseport ?? "—"}</td>
+                <td>{visa?.numeroReference ?? "—"}</td>
+                <td>{demande.typeDemande?.libelle}</td>
+                <td>{demande.typeVisa?.libelle}</td>
+                <td>
+                  {demande.id && (
+                    <QRCodeSVG
+                      value={`${window.location.origin}/fiche-demande/${demande.id}`}
+                      size={64}
+                    />
+                  )}
+                </td>
+                  <td>
+                    <Link to={`/fiche-demande/${demande.id}`}>Voir détails</Link>
+                  </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
   );
-};
+}
 
 export default ListeDemande;
