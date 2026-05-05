@@ -8,6 +8,12 @@ function FichiersDetailDemande() {
   const [fichiers, setFichiers] = useState([]);
   const [erreur, setErreur] = useState("");
 
+  const formatFileName = (path) => {
+    if (!path) return "Document";
+    const cleanPath = path.replace(/\\/g, '/');
+    return cleanPath.substring(cleanPath.lastIndexOf('/') + 1);
+  };
+
   useEffect(() => {
     getDetailsFichier(id)
       .then(res => {
@@ -32,7 +38,7 @@ function FichiersDetailDemande() {
         <div className="grid-cards">
           {fichiers.map((f, i) => (
             <div key={i} className="fiche-section" style={{ gridColumn: 'span 2' }}>
-              <h2 className="my-0 mb-4">{f.pieceRequise?.libelle ?? f.cheminFichier ?? "Document"}</h2>
+              <h2 className="my-0 mb-4">{f.pieceRequise?.libelle ?? formatFileName(f.cheminFichier)}</h2>
               
               <div className="fichier-preview-container" style={{ textAlign: 'center', background: '#fcfcfc', border: '1px dashed #ddd', borderRadius: '8px', padding: '1rem' }}>
                 {f.base64 ? (
