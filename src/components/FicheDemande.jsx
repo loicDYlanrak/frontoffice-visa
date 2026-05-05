@@ -137,7 +137,7 @@ function FicheDemande() {
 
       <div className="grid-cards">
         {/* Historique statuts */}
-        <section className="fiche-section" style={{ gridColumn: 'span 2' }}>
+        <section className="fiche-section span-full">
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h2 className="my-0 border-0">Historique de statut</h2>
             <button className="btn-edit" onClick={() => navigate(`/histo-statut/${id}`)}>
@@ -173,7 +173,7 @@ function FicheDemande() {
         </section>
 
         {/* Fichiers */}
-        <section className="fiche-section" style={{ gridColumn: 'span 2' }}>
+        <section className="fiche-section span-full">
            <div className="d-flex align-items-center justify-content-between mb-4">
             <h2 className="my-0 border-0">Pièces Justificatives</h2>
             <button className="btn-submit" onClick={() => navigate(`/fichiers-detail/${id}`)}>

@@ -35,9 +35,9 @@ function FichiersDetailDemande() {
       {fichiers.length === 0 && !erreur ? (
         <p className="text-muted mt-4">Aucun fichier disponible</p>
       ) : (
-        <div className="grid-cards">
+        <div className="file-preview-list">
           {fichiers.map((f, i) => (
-            <div key={i} className="fiche-section" style={{ gridColumn: 'span 2' }}>
+            <div key={i} className="fiche-section">
               <h2 className="my-0 mb-4">{f.pieceRequise?.libelle ?? formatFileName(f.cheminFichier)}</h2>
               
               <div className="fichier-preview-container" style={{ textAlign: 'center', background: '#fcfcfc', border: '1px dashed #ddd', borderRadius: '8px', padding: '1rem' }}>
