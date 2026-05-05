@@ -18,21 +18,23 @@ function FichiersDetailDemande() {
   }, [id]);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Détail des fichiers — Demande #{id}</h1>
-      <button onClick={() => navigate(`/fiche-demande/${id}`)}>← Retour</button>
+    <div className="liste-test">
+      <div className="d-flex align-items-center justify-content-between mb-4">
+        <h1 className="my-0">Détail des fichiers — Demande #{id}</h1>
+        <button className="btn-submit" onClick={() => navigate(`/fiche-demande/${id}`)}>← Retour</button>
+      </div>
 
-      {erreur && <p style={{ color: "red", marginTop: "1rem" }}>{erreur}</p>}
+      {erreur && <div className="error">{erreur}</div>}
 
       {fichiers.length === 0 && !erreur ? (
-        <p style={{ marginTop: "1rem" }}>Aucun fichier disponible</p>
+        <p className="text-muted mt-4">Aucun fichier disponible</p>
       ) : (
-        <div style={{ display: "grid", gap: "20px", marginTop: "20px" }}>
+        <div className="grid-cards">
           {fichiers.map((f, i) => (
-            <div key={i} style={{ border: "1px solid #ccc", padding: "15px", borderRadius: "8px", background: "white" }}>
-              <h3>{f.pieceRequise?.libelle ?? f.cheminFichier ?? "Document"}</h3>
+            <div key={i} className="fiche-section" style={{ gridColumn: 'span 2' }}>
+              <h2 className="my-0 mb-4">{f.pieceRequise?.libelle ?? f.cheminFichier ?? "Document"}</h2>
               
-              <div style={{ marginTop: "10px" }}>
+              <div className="fichier-preview-container" style={{ textAlign: 'center', background: '#fcfcfc', border: '1px dashed #ddd', borderRadius: '8px', padding: '1rem' }}>
                 {f.base64 ? (
                   f.cheminFichier?.toLowerCase().endsWith(".pdf") ? (
                     <embed
@@ -40,12 +42,13 @@ function FichiersDetailDemande() {
                       width="100%"
                       height="500px"
                       type="application/pdf"
+                      style={{ borderRadius: "8px" }}
                     />
                   ) : (
                     <img 
                       src={`data:image/jpeg;base64,${f.base64}`} 
                       alt={f.pieceRequise?.libelle ?? "Fichier"}
-                      style={{ maxWidth: "100%", maxHeight: "300px", objectFit: "contain", border: "1px solid #eee" }}
+                      style={{ maxWidth: "100%", maxHeight: "400px", objectFit: "contain", borderRadius: "8px" }}
                     />
                   )
                 ) : f.cheminFichier ? (
@@ -55,20 +58,21 @@ function FichiersDetailDemande() {
                       width="100%"
                       height="500px"
                       type="application/pdf"
+                      style={{ borderRadius: "8px" }}
                     />
                   ) : (
                     <img 
                       src={`${API_BASE_URL}/${f.cheminFichier.replace(/\\/g, '/')}`} 
                       alt={f.pieceRequise?.libelle ?? "Fichier"}
-                      style={{ maxWidth: "100%", maxHeight: "300px", objectFit: "contain", border: "1px solid #eee" }}
+                      style={{ maxWidth: "100%", maxHeight: "400px", objectFit: "contain", borderRadius: "8px" }}
                     />
                   )
                 ) : f.urlFichier ? (
-                  <a href={f.urlFichier} target="_blank" rel="noreferrer" style={{ color: "blue", textDecoration: "underline" }}>
-                    Voir le fichier en ligne
+                  <a href={f.urlFichier} target="_blank" rel="noreferrer" className="btn-edit" style={{ display: 'inline-block' }}>
+                    Voir le fichier complet en ligne ↗
                   </a>
                 ) : (
-                  <p style={{ fontStyle: "italic", color: "#666" }}>Aucun aperçu disponible</p>
+                  <p className="text-muted" style={{ fontStyle: "italic", margin: "2rem 0" }}>Aucun aperçu disponible pour ce fichier</p>
                 )}
               </div>
             </div>

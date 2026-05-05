@@ -56,42 +56,47 @@ function RechercheDemandeApp() {
   };
 
   return (
-    <div>
-      <h1>Recherche de demande</h1>
+    <div className="liste-test">
+      <h2>Recherche de demande</h2>
 
-      <input
-        value={numeroDemande}
-        onChange={(e) => setNumeroDemande(e.target.value)}
-        placeholder="Numéro de demande"
-      />
-      <input
-        value={numeroPasseport}
-        onChange={(e) => setNumeroPasseport(e.target.value)}
-        placeholder="Numéro de passeport"
-      />
-      <button onClick={handleRecherche}>Rechercher</button>
+      <div className="search-form">
+        <input
+          value={numeroDemande}
+          onChange={(e) => setNumeroDemande(e.target.value)}
+          placeholder="Numéro de demande (ex: 123)"
+        />
+        <input
+          value={numeroPasseport}
+          onChange={(e) => setNumeroPasseport(e.target.value)}
+          placeholder="Numéro de passeport (ex: C12345)"
+        />
+        <button onClick={handleRecherche} className="btn-submit">
+          Rechercher
+        </button>
+      </div>
 
-      {loading && <p>⏳ Chargement...</p>}
-      {erreur   && <p style={{ color: "red" }}>{erreur}</p>}
+      {loading && <div className="loading">⏳ Poursuite de la recherche en cours...</div>}
+      {erreur   && <div className="error">{erreur}</div>}
 
       {/* Recherche par numéro demande */}
       {mode === "demande" && demandePrincipale.length > 0 && (
-        <>
-          <ListeDemande demandes={demandePrincipale} titre="Demande" />
+        <div className="results-container">
+          <ListeDemande demandes={demandePrincipale} titre="Résultat Principal : Demande ciblée" />
 
           {demandesAssociees.length > 0 && (
-            <>
-              <hr />
-              <ListeDemande demandes={demandesAssociees} titre="Demandes associées" />
-            </>
-            
+            <div className="mt-4">
+              <hr className="my-hr" />
+              <ListeDemande demandes={demandesAssociees} titre="Autres demandes associées au demandeur" />
+            </div>
           )}
-        </>
+        </div>
       )}
 
       {/* Recherche par passeport */}
       {mode === "passeport" && demandePrincipale.length > 0 && (
-        <ListeDemande demandes={demandePrincipale} titre="Demandes liées au passeport" />
+        <div className="results-container">
+          <ListeDemande demandes={demandePrincipale} titre="Demandes liées au passeport" />
+        </div>
       )}
     </div>
   );  

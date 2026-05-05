@@ -18,31 +18,39 @@ function HistoStatutDemande() {
   }, [id]);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Historique des statuts — Demande #{id}</h1>
-      <button onClick={() => navigate(`/fiche-demande/${id}`)}>← Retour</button>
+    <div className="liste-test">
+      <div className="d-flex align-items-center justify-content-between mb-4">
+        <h1 className="my-0">Historique des statuts — Demande #{id}</h1>
+        <button className="btn-submit" onClick={() => navigate(`/fiche-demande/${id}`)}>← Retour</button>
+      </div>
 
-      {erreur && <p style={{ color: "red" }}>{erreur}</p>}
+      {erreur && <div className="error">{erreur}</div>}
 
       {statuts.length === 0 ? (
-        <p>Aucun statut disponible</p>
+        <p className="text-muted">Aucun statut disponible</p>
       ) : (
-        <table border="1">
-          <thead>
-            <tr>
-              <th>Statut</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...statuts].reverse().map((s, i) => (
-              <tr key={i}>
-                <td>{s.libelleStatut}</td>
-                <td>{s.dateChangementStatut}</td>
+        <div className="table-responsive">
+          <table className="test-table">
+            <thead>
+              <tr>
+                <th>Statut</th>
+                <th>Date</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {[...statuts].reverse().map((s, i) => (
+                <tr key={i}>
+                  <td>
+                    <span className="status status-active">
+                      {s.libelleStatut}
+                    </span>
+                  </td>
+                  <td>{new Date(s.dateChangementStatut).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

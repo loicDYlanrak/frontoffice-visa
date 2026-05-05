@@ -25,131 +25,220 @@ function FicheDemande() {
       .catch(() => setFichiers([]));
   }, [id]);
 
-  if (erreur) return <p style={{ color: "red" }}>{erreur}</p>;
-  if (!data) return <p>⏳ Chargement...</p>;
+  if (erreur) return <div className="error">{erreur}</div>;
+  if (!data) return <div className="loading">⏳ Chargement de la fiche de la demande...</div>;
 
   const derniers3Statuts = statuts.slice(-3).reverse();
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Fiche Demande #{id}</h1>
+    <div className="liste-test">
+      <div className="fiche-header">
+        <h1 className="my-0">Fiche de Demande <span style={{ color: "#F2B544" }}>#{id}</span></h1>
+        <button className="btn-submit" onClick={() => navigate("/recherche")}>
+          Nouvelle recherche
+        </button>
+      </div>
 
-      {/* QR Code */}
-      <section>
-        <h2>QR Code</h2>
-        <QRCodeSVG
-          value={`${window.location.origin}/fiche-demande/${id}`}
-          size={128}
-        />
-      </section>
-
-      {/* État civil */}
-      <section>
-        <h2>État Civil</h2>
-        <p><strong>Nom :</strong> {data.EtatCivil?.nom} {data.EtatCivil?.prenom}</p>
-        <p><strong>Date de naissance :</strong> {data.EtatCivil?.dateNaissance}</p>
-        <p><strong>Lieu de naissance :</strong> {data.EtatCivil?.lieuNaissance}</p>
-        <p><strong>Nationalité :</strong> {data.EtatCivil?.nationalite?.libelle}</p>
-        <p><strong>Situation familiale :</strong> {data.EtatCivil?.situationFamiliale?.libelle}</p>
-        <p><strong>Téléphone :</strong> {data.EtatCivil?.telephone}</p>
-        <p><strong>Email :</strong> {data.EtatCivil?.email}</p>
-        <p><strong>Adresse :</strong> {data.EtatCivil?.adresse}</p>
-      </section>
-
-      {/* Passeport */}
-      <section>
-        <h2>Passeport</h2>
-        <p><strong>Numéro :</strong> {data.passeport?.numeroPasseport ?? "—"}</p>
-        <p><strong>Date de délivrance :</strong> {data.passeport?.dateDelivrance ?? "—"}</p>
-        <p><strong>Date d'expiration :</strong> {data.passeport?.dateExpiration ?? "—"}</p>
-        <p><strong>Pays de délivrance :</strong> {data.passeport?.paysDelivrance ?? "—"}</p>
-      </section>
-
-      {/* Visa transformable */}
-      <section>
-        <h2>Visa Transformable</h2>
-        <p><strong>Référence :</strong> {data.visaTransformable?.numeroReference ?? "—"}</p>
-        <p><strong>Date d'entrée :</strong> {data.visaTransformable?.dateEntree ?? "—"}</p>
-        <p><strong>Date de sortie :</strong> {data.visaTransformable?.dateSortie ?? "—"}</p>
-        <p><strong>Type visa :</strong> {data.typeVisa?.libelle ?? "—"}</p>
-        <p><strong>Type demande :</strong> {data.typeDemande?.libelle ?? "—"}</p>
-      </section>
-
-      {/* Statut actuel */}
-      <section>
-        <h2>Statut actuel</h2>
-        <p><strong>{data.Status ?? "—"}</strong></p>
-      </section>
-
-      {/* Visa et carte de résidence si approuvé */}
-      {data.visa && (
-        <section>
-          <h2>Visa</h2>
-          <p><strong>Référence :</strong> {data.visa?.reference}</p>
-          <p><strong>Date début :</strong> {data.visa?.dateDebut}</p>
-          <p><strong>Date fin :</strong> {data.visa?.dateFin}</p>
+      <div className="grid-cards">
+        {/* QR Code */}
+        <section className="fiche-section" style={{ textAlign: 'center' }}>
+          <h2>Scanner pour suivi</h2>
+          <QRCodeSVG
+            value={`${window.location.origin}/fiche-demande/${id}`}
+            size={160}
+            className="qr-code-img"
+            style={{ margin: "1rem auto" }}
+          />
         </section>
-      )}
-      {data.carteResident && (
-        <section>
-          <h2>Carte de Résidence</h2>
-          <p><strong>Référence :</strong> {data.carteResident?.reference}</p>
+
+        {/* État civil */}
+        <section className="fiche-section">
+          <h2>État Civil</h2>
+          <div className="fiche-item">
+            <span className="fiche-label">Nom</span>
+            <span className="fiche-value">{data.EtatCivil?.nom} {data.EtatCivil?.prenom}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Date de naissance</span>
+            <span className="fiche-value">{data.EtatCivil?.dateNaissance}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Lieu de naissance</span>
+            <span className="fiche-value">{data.EtatCivil?.lieuNaissance}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Nationalité</span>
+            <span className="fiche-value">{data.EtatCivil?.nationalite?.libelle}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Situation familiale</span>
+            <span className="fiche-value">{data.EtatCivil?.situationFamiliale?.libelle}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Téléphone</span>
+            <span className="fiche-value">{data.EtatCivil?.telephone}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Email</span>
+            <span className="fiche-value">{data.EtatCivil?.email}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Adresse</span>
+            <span className="fiche-value">{data.EtatCivil?.adresse}</span>
+          </div>
         </section>
+
+        {/* Passeport */}
+        <section className="fiche-section">
+          <h2>Passeport</h2>
+          <div className="fiche-item">
+            <span className="fiche-label">Numéro</span>
+            <span className="fiche-value">{data.passeport?.numeroPasseport ?? "—"}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Date de délivrance</span>
+            <span className="fiche-value">{data.passeport?.dateDelivrance ?? "—"}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Date d'expiration</span>
+            <span className="fiche-value">{data.passeport?.dateExpiration ?? "—"}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Pays de délivrance</span>
+            <span className="fiche-value">{data.passeport?.paysDelivrance ?? "—"}</span>
+          </div>
+        </section>
+
+        {/* Visa transformable */}
+        <section className="fiche-section">
+          <h2>Visa Transformable</h2>
+          <div className="fiche-item">
+            <span className="fiche-label">Référence</span>
+            <span className="fiche-value">{data.visaTransformable?.numeroReference ?? "—"}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Date d'entrée</span>
+            <span className="fiche-value">{data.visaTransformable?.dateEntree ?? "—"}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Date de sortie</span>
+            <span className="fiche-value">{data.visaTransformable?.dateSortie ?? "—"}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Type visa</span>
+            <span className="fiche-value">{data.typeVisa?.libelle ?? "—"}</span>
+          </div>
+          <div className="fiche-item">
+            <span className="fiche-label">Type demande</span>
+            <span className="fiche-value">{data.typeDemande?.libelle ?? "—"}</span>
+          </div>
+        </section>
+      </div>
+
+      <div className="grid-cards">
+        {/* Historique statuts */}
+        <section className="fiche-section" style={{ gridColumn: 'span 2' }}>
+          <div className="d-flex align-items-center justify-content-between mb-4">
+            <h2 className="my-0 border-0">Historique de statut</h2>
+            <button className="btn-edit" onClick={() => navigate(`/histo-statut/${id}`)}>
+              Voir historique complet
+            </button>
+          </div>
+          {derniers3Statuts.length === 0 ? (
+            <p className="text-muted">Aucun statut disponible</p>
+          ) : (
+            <div className="table-responsive">
+              <table className="test-table">
+                <thead>
+                  <tr>
+                    <th>Statut</th>
+                    <th>Date d'affectation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {derniers3Statuts.map((s, i) => (
+                    <tr key={i}>
+                      <td>
+                        <span className="status status-active">
+                          {s.libelleStatut}
+                        </span>
+                      </td>
+                      <td>{new Date(s.dateChangementStatut).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
+        {/* Fichiers */}
+        <section className="fiche-section" style={{ gridColumn: 'span 2' }}>
+           <div className="d-flex align-items-center justify-content-between mb-4">
+            <h2 className="my-0 border-0">Pièces Justificatives</h2>
+            <button className="btn-submit" onClick={() => navigate(`/fichiers-detail/${id}`)}>
+              Voir détail uploads
+            </button>
+          </div>
+          {fichiers.length === 0 ? (
+            <p className="text-muted">Aucun fichier uploadé</p>
+          ) : (
+            <div className="table-responsive">
+              <table className="test-table">
+                <thead>
+                  <tr>
+                    <th>Document Requis</th>
+                    <th>Statut Upload</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {fichiers.map((f, i) => (
+                    <tr key={i}>
+                      <td>{f.pieceRequise?.libelle ?? f.cheminFichier}</td>
+                      <td>
+                        <span className="status status-active" style={{ backgroundColor: "#10b981" }}> ✓ Fourni </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      </div>
+
+      {/* Reste Conditionnel (Visa / Carte résident) */}
+      {(data.visa || data.carteResident) && (
+        <div className="grid-cards">
+          {data.visa && (
+            <section className="fiche-section">
+              <h2>Visa Délivré</h2>
+              <div className="fiche-item">
+                <span className="fiche-label">Référence</span>
+                <span className="fiche-value">{data.visa?.reference}</span>
+              </div>
+              <div className="fiche-item">
+                <span className="fiche-label">Date début</span>
+                <span className="fiche-value">{data.visa?.dateDebut}</span>
+              </div>
+              <div className="fiche-item">
+                <span className="fiche-label">Date fin</span>
+                <span className="fiche-value">{data.visa?.dateFin}</span>
+              </div>
+            </section>
+          )}
+          {data.carteResident && (
+            <section className="fiche-section">
+              <h2>Carte de Résidence</h2>
+              <div className="fiche-item">
+                <span className="fiche-label">Référence</span>
+                <span className="fiche-value">{data.carteResident?.reference}</span>
+              </div>
+            </section>
+          )}
+        </div>
       )}
 
-      {/* Historique statuts */}
-      <section>
-        <h2>Historique de statut</h2>
-        {derniers3Statuts.length === 0 ? (
-          <p>Aucun statut disponible</p>
-        ) : (
-          <table border="1">
-            <thead>
-              <tr>
-                <th>Statut</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {derniers3Statuts.map((s, i) => (
-                <tr key={i}>
-                  <td>{s.libelleStatut}</td>
-                  <td>{s.dateChangementStatut}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        <button onClick={() => navigate(`/histo-statut/${id}`)}>Voir plus</button>
-      </section>
-
-      {/* Fichiers */}
-      <section>
-        <h2>Fichiers</h2>
-        {fichiers.length === 0 ? (
-          <p>Aucun fichier uploadé</p>
-        ) : (
-          <table border="1">
-            <thead>
-              <tr>
-                <th>Document</th>
-                <th>Uploadé</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fichiers.map((f, i) => (
-                <tr key={i}>
-                  <td>{f.pieceRequise?.libelle ?? f.cheminFichier}</td>
-                  <td>
-                    <input type="checkbox" checked={true} readOnly />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        <button onClick={() => navigate(`/fichiers-detail/${id}`)}>Voir détail upload</button>
-      </section>
     </div>
   );
 }

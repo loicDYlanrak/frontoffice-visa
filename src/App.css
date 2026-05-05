@@ -597,3 +597,136 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #F2B544;
 }
+
+/* ============================================================== 
+   NEW UTILITIES & COMPONENT SPECIFIC DESIGN
+============================================================== */
+
+/* Responsive Tables Wrapper */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 1rem;
+}
+
+/* Utilities for Spacing and Display */
+.mt-4 {
+  margin-top: 2rem !important;
+}
+
+.mb-4 {
+  margin-bottom: 2rem !important;
+}
+
+.my-hr {
+  border: 0;
+  height: 1px;
+  background: rgba(3, 11, 166, 0.1);
+  margin: 2rem 0;
+}
+
+.results-container {
+  margin-top: 2rem;
+  background: #fdfdfd;
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.qr-code-img {
+  border: 2px solid #F2B544;
+  border-radius: 8px;
+  padding: 4px;
+  background: white;
+}
+
+/* Flex Utilities */
+.d-flex {
+  display: flex !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.justify-content-between {
+  justify-content: space-between !important;
+}
+
+.my-0 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.text-muted {
+  color: #6b7280;
+}
+
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.fiche-header {
+  background: #030BA6;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fiche-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.fiche-section {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  transition: transform 0.3s ease;
+}
+
+.fiche-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
+.fiche-section h2 {
+  color: #1F3A40;
+  font-size: 1.25rem;
+  border-bottom: 2px solid #F2F2F2;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.fiche-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+}
+
+.fiche-item:last-child {
+  border-bottom: none;
+}
+
+.fiche-label {
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.fiche-value {
+  font-weight: 600;
+  color: #1F3A40;
+  text-align: right;
+} 
