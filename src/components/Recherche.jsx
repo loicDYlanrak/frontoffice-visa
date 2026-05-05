@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { rechercherParNumeroDemande, rechercherParPasseport } from "../services/api";
+import { separerDemandePrincipaleEtAssociees, trierDemandesChronologique } from "../utils/listProcessing";
 import ListeDemande from "./ListeDemande";
 
 function RechercheDemandeApp() {
@@ -30,18 +31,16 @@ function RechercheDemandeApp() {
         setMode("demande");
         res = await rechercherParNumeroDemande(numeroDemande);
 
-        const [premiere, ...reste] = res.data;
-        setDemandePrincipale(premiere ? [premiere] : []);
-        setDemandesAssociees(reste);
+        const { principale, associees } = separerDemandePrincipaleEtAssociees(res.data);
+        setDemandePrincipale(principale);
+        setDemandesAssociees(associees);
         console.log("Données reçues :", res.data);
 
       } else {
         setMode("passeport");
         res = await rechercherParPasseport(numeroPasseport);
 
-        const triees = res.data.sort((a, b) =>
-          new Date(a.dateDemande) - new Date(b.dateDemande)
-        );
+        const triees = trierDemandesChronologique(res.data);
         setDemandePrincipale(triees);
       }
 

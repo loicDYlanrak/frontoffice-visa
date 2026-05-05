@@ -197,7 +197,7 @@ Composant FichiersDetailDemande.jsx
     - Afficher la liste des fichiers :
         - Nom du fichier
         - Aperçu (base64 ou URL)
-    d une demande specifique
+    d une demande specifique/
 
 Logique et appels API
     - Séparer la logique de traitement des listes dans des fichiers .js dédiés

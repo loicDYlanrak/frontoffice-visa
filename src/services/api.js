@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-const BASE_URL = process.env.REACT_APP_API_URL;
-
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8090';
 
 const api = axios.create({
   baseURL: `${API_BASE_URL}`,
@@ -77,31 +75,31 @@ export const testService = {
 };
 
 export const rechercherParNumeroDemande = (numeroDemande) =>
-  axios.get(`${BASE_URL}/demandesRecherche`, {
+  axios.get(`${API_BASE_URL}/demandesRecherche`, {
     params: { numeroDemande }
   });
 
 // Recherche par numéro de passeport
 export const rechercherParPasseport = (numeroPasseport) =>
-  axios.get(`${BASE_URL}/demandesRecherche`, {
+  axios.get(`${API_BASE_URL}/demandesRecherche`, {
     params: { numeroPasseport }
   });
 
 // Détails d'une demande
 export const getDemandeDetails = (id) =>
-  axios.get(`${BASE_URL}/demandeDetails/${id}`);
+  axios.get(`${API_BASE_URL}/demandeDetails/${id}`);
 
 // Historique des statuts
 export const getHistoStatut = (id) =>
-  axios.get(`${BASE_URL}/demandeDetails/HistoStatut/${id}`);
+  axios.get(`${API_BASE_URL}/demandeDetails/HistoStatut/${id}`);
 
 // Fichiers uploadés
 export const getDetailsFichier = (id) =>
-  axios.get(`${BASE_URL}/demandeDetails/DetailsFichier/${id}`);
+  axios.get(`${API_BASE_URL}/demandeDetails/DetailsFichier/${id}`);
 
 // Recherche duplicata/transfert
 export const rechercherDuplicata = (numCarte, numVisa, transfer, duplicata) =>
-  axios.post(`${BASE_URL}/duplicata/rechercher`, null, {
+  axios.post(`${API_BASE_URL}/duplicata/rechercher`, null, {
     params: { numCarte, numVisa, transfer, duplicata }
   });
 
