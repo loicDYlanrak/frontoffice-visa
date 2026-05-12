@@ -1,7 +1,12 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
-import { getDemandeDetails, getHistoStatut, getDetailsFichier } from "../services/api";
+import {
+  getDemandeDetails,
+  getHistoStatut,
+  getDetailsFichier,
+} from "../services/api";
 
 function FicheDemande() {
   const { id } = useParams();
@@ -13,27 +18,48 @@ function FicheDemande() {
 
   useEffect(() => {
     getDemandeDetails(id)
-      .then(res => setData(res.data))
+      .then((res) => setData(res.data))
       .catch(() => setErreur("Demande introuvable"));
-
     getHistoStatut(id)
-      .then(res => setStatuts(res.data))
+      .then((res) => setStatuts(res.data))
       .catch(() => setStatuts([]));
 
     getDetailsFichier(id)
-      .then(res => setFichiers(res.data))
+      .then((res) => setFichiers(res.data))
       .catch(() => setFichiers([]));
   }, [id]);
+  // Ajoutez cette fonction utilitaire avant le return (par exemple après les useState)
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    // Remplacer les backslashes par des slashes pour l'URL
+    const normalizedPath = path.replace(/\\/g, "/");
+    // Extraire juste la partie du chemin relatif (uploadsdemande_X/nom_fichier)
+    const match = normalizedPath.match(/uploadsdemande_\d+\/(.+)$/);
+    if (match) {
+      return `http://localhost:8090/uploads/${id}/${match[1]}`;
+    }
+    return null;
+  };
 
+  const photoData = data?.photoSignature?.[0];
+  const photoUrl = photoData?.photoUrl ? getImageUrl(photoData.photoUrl) : null;
+  const signatureUrl = photoData?.signatureUrl
+    ? getImageUrl(photoData.signatureUrl)
+    : null;
   if (erreur) return <div className="error">{erreur}</div>;
-  if (!data) return <div className="loading">⏳ Chargement de la fiche de la demande...</div>;
+  if (!data)
+    return (
+      <div className="loading">⏳ Chargement de la fiche de la demande...</div>
+    );
 
   const derniers3Statuts = statuts.slice(-3).reverse();
 
   return (
     <div className="liste-test">
       <div className="fiche-header">
-        <h1 className="my-0">Fiche de Demande <span style={{ color: "#F2B544" }}>#{id}</span></h1>
+        <h1 className="my-0">
+          Fiche de Demande <span style={{ color: "#F2B544" }}>#{id}</span>
+        </h1>
         <button className="btn-submit" onClick={() => navigate("/recherche")}>
           Nouvelle recherche
         </button>
@@ -41,7 +67,7 @@ function FicheDemande() {
 
       <div className="grid-cards">
         {/* QR Code */}
-        <section className="fiche-section" style={{ textAlign: 'center' }}>
+        <section className="fiche-section" style={{ textAlign: "center" }}>
           <h2>Scanner pour suivi</h2>
           <QRCodeSVG
             value={`${window.location.origin}/fiche-demande/${id}`}
@@ -50,13 +76,56 @@ function FicheDemande() {
             style={{ margin: "1rem auto" }}
           />
         </section>
+        {/* Photo et Signature - à placer où vous voulez, par exemple après le QR Code */}
+        {(photoUrl || signatureUrl) && (
+          <section className="fiche-section">
+            <h2>Photo et Signature</h2>
+            {photoUrl && (
+              <div className="fiche-item">
+                <span className="fiche-label">Photo</span>
+                <div className="fiche-value">
+                  <img
+                    src={photoUrl}
+                    alt="Photo du demandeur"
+                    style={{ maxWidth: "150px", borderRadius: "8px" }}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.parentElement.innerHTML =
+                        '<span style="color: red;">Image non disponible</span>';
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+            {signatureUrl && (
+              <div className="fiche-item">
+                <span className="fiche-label">Signature</span>
+                <div className="fiche-value">
+                  <img
+                    src={signatureUrl}
+                    alt="Signature"
+                    style={{ maxWidth: "200px", maxHeight: "80px" }}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.parentElement.innerHTML =
+                        '<span style="color: red;">Signature non disponible</span>';
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* État civil */}
         <section className="fiche-section">
           <h2>État Civil</h2>
+
           <div className="fiche-item">
             <span className="fiche-label">Nom</span>
-            <span className="fiche-value">{data.EtatCivil?.nom} {data.EtatCivil?.prenom}</span>
+            <span className="fiche-value">
+              {data.EtatCivil?.nom} {data.EtatCivil?.prenom}
+            </span>
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Date de naissance</span>
@@ -68,11 +137,15 @@ function FicheDemande() {
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Nationalité</span>
-            <span className="fiche-value">{data.EtatCivil?.nationalite?.libelle}</span>
+            <span className="fiche-value">
+              {data.EtatCivil?.nationalite?.libelle}
+            </span>
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Situation familiale</span>
-            <span className="fiche-value">{data.EtatCivil?.situationFamiliale?.libelle}</span>
+            <span className="fiche-value">
+              {data.EtatCivil?.situationFamiliale?.libelle}
+            </span>
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Téléphone</span>
@@ -93,19 +166,27 @@ function FicheDemande() {
           <h2>Passeport</h2>
           <div className="fiche-item">
             <span className="fiche-label">Numéro</span>
-            <span className="fiche-value">{data.passeport?.numeroPasseport ?? "—"}</span>
+            <span className="fiche-value">
+              {data.passeport?.numeroPasseport ?? "—"}
+            </span>
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Date de délivrance</span>
-            <span className="fiche-value">{data.passeport?.dateDelivrance ?? "—"}</span>
+            <span className="fiche-value">
+              {data.passeport?.dateDelivrance ?? "—"}
+            </span>
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Date d'expiration</span>
-            <span className="fiche-value">{data.passeport?.dateExpiration ?? "—"}</span>
+            <span className="fiche-value">
+              {data.passeport?.dateExpiration ?? "—"}
+            </span>
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Pays de délivrance</span>
-            <span className="fiche-value">{data.passeport?.paysDelivrance ?? "—"}</span>
+            <span className="fiche-value">
+              {data.passeport?.paysDelivrance ?? "—"}
+            </span>
           </div>
         </section>
 
@@ -114,15 +195,21 @@ function FicheDemande() {
           <h2>Visa Transformable</h2>
           <div className="fiche-item">
             <span className="fiche-label">Référence</span>
-            <span className="fiche-value">{data.visaTransformable?.numeroReference ?? "—"}</span>
+            <span className="fiche-value">
+              {data.visaTransformable?.numeroReference ?? "—"}
+            </span>
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Date d'entrée</span>
-            <span className="fiche-value">{data.visaTransformable?.dateEntree ?? "—"}</span>
+            <span className="fiche-value">
+              {data.visaTransformable?.dateEntree ?? "—"}
+            </span>
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Date de sortie</span>
-            <span className="fiche-value">{data.visaTransformable?.dateSortie ?? "—"}</span>
+            <span className="fiche-value">
+              {data.visaTransformable?.dateSortie ?? "—"}
+            </span>
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Type visa</span>
@@ -130,7 +217,9 @@ function FicheDemande() {
           </div>
           <div className="fiche-item">
             <span className="fiche-label">Type demande</span>
-            <span className="fiche-value">{data.typeDemande?.libelle ?? "—"}</span>
+            <span className="fiche-value">
+              {data.typeDemande?.libelle ?? "—"}
+            </span>
           </div>
         </section>
       </div>
@@ -140,7 +229,10 @@ function FicheDemande() {
         <section className="fiche-section span-full">
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h2 className="my-0 border-0">Historique de statut</h2>
-            <button className="btn-edit" onClick={() => navigate(`/histo-statut/${id}`)}>
+            <button
+              className="btn-edit"
+              onClick={() => navigate(`/histo-statut/${id}`)}
+            >
               Voir historique complet
             </button>
           </div>
@@ -163,7 +255,9 @@ function FicheDemande() {
                           {s.libelleStatut}
                         </span>
                       </td>
-                      <td>{new Date(s.dateChangementStatut).toLocaleString()}</td>
+                      <td>
+                        {new Date(s.dateChangementStatut).toLocaleString()}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -174,9 +268,12 @@ function FicheDemande() {
 
         {/* Fichiers */}
         <section className="fiche-section span-full">
-           <div className="d-flex align-items-center justify-content-between mb-4">
+          <div className="d-flex align-items-center justify-content-between mb-4">
             <h2 className="my-0 border-0">Pièces Justificatives</h2>
-            <button className="btn-submit" onClick={() => navigate(`/fichiers-detail/${id}`)}>
+            <button
+              className="btn-submit"
+              onClick={() => navigate(`/fichiers-detail/${id}`)}
+            >
               Voir détail uploads
             </button>
           </div>
@@ -196,7 +293,13 @@ function FicheDemande() {
                     <tr key={i}>
                       <td>{f.pieceRequise?.libelle ?? f.cheminFichier}</td>
                       <td>
-                        <span className="status status-active" style={{ backgroundColor: "#10b981" }}> ✓ Fourni </span>
+                        <span
+                          className="status status-active"
+                          style={{ backgroundColor: "#10b981" }}
+                        >
+                          {" "}
+                          ✓ Fourni{" "}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -232,13 +335,14 @@ function FicheDemande() {
               <h2>Carte de Résidence</h2>
               <div className="fiche-item">
                 <span className="fiche-label">Référence</span>
-                <span className="fiche-value">{data.carteResident?.reference}</span>
+                <span className="fiche-value">
+                  {data.carteResident?.reference}
+                </span>
               </div>
             </section>
           )}
         </div>
       )}
-
     </div>
   );
 }
