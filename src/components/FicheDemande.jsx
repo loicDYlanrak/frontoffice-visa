@@ -28,21 +28,22 @@ function FicheDemande() {
       .then((res) => setFichiers(res.data))
       .catch(() => setFichiers([]));
   }, [id]);
-  // Ajoutez cette fonction utilitaire avant le return (par exemple après les useState)
+  console.log(data)
   const getImageUrl = (path) => {
     if (!path) return null;
     // Remplacer les backslashes par des slashes pour l'URL
     const normalizedPath = path.replace(/\\/g, "/");
     // Extraire juste la partie du chemin relatif (uploadsdemande_X/nom_fichier)
-    const match = normalizedPath.match(/uploadsdemande_\d+\/(.+)$/);
+    const match = normalizedPath.match(/uploads\/demande_\d+\/(.+)$/);
     if (match) {
       return `http://localhost:8090/uploads/${id}/${match[1]}`;
     }
     return null;
   };
-
   const photoData = data?.photoSignature?.[0];
+  console.log("photoData.photoUrl:",getImageUrl(photoData.photoUrl))
   const photoUrl = photoData?.photoUrl ? getImageUrl(photoData.photoUrl) : null;
+  console.log("photoUrl:",photoUrl)
   const signatureUrl = photoData?.signatureUrl
     ? getImageUrl(photoData.signatureUrl)
     : null;
